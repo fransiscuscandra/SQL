@@ -1,0 +1,9 @@
+with stationSorted as 
+(
+select id,lat_n,row_number()over(order by lat_n) as id2 from station
+)
+select cast((sum(lat_n)/count(1)) as numeric(10,4)) 
+ from stationSorted where cast(id2 as varchar(10)) in 
+ ( select case when count(1)%2=0 then 
+ cast((count(1)/2) as varchar(20))+','+cast(((count(1)/2)+1) as varchar(20)) 
+ else cast((count(1)+1)/2 as varchar(50)) end from STATION);
